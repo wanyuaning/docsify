@@ -1,3 +1,144 @@
+
+```
+[CLASS s20 l14]
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/vue.js"></script>
+  </head>
+<body>
+  <div id="container">
+    <div>{{title}}:
+      <span v-text="firstName"></span>
+      <span v-html="lastName"></span>
+    </div>
+    <div v-bind:title="fullName"
+      v-bind:class="{active: isActive, otherclass: isOtherclass}"
+      :class="[isActiveClass, isOtherClass]"
+      :class="`ball${item.id}`"
+      :style="{color: activeColor, fontSize: fontSize + 'px'}"
+      >
+    属性绑定：v-bind:title="fullName" ／ 简写：:title="fullName" ／ 表达式：:title="'表达式' + fullName"
+    </div>
+    <div>
+      双向绑定：
+      <input v-model.trim ="firstName" />
+      <input v-model="lastName" /> ／
+      计算属性：
+      {{fullName}} ／
+      帧听&过滤器：
+      {{nameChangeCount | decimal}}
+    </div>
+    <div>
+      <input v-model="todoListAddValue" />
+      <!-- 事件: @click="handleClick"
+                @click="handleClick($event, 1)"  带参
+                v-on:click="handleClick"
+                v-on:click.stop       修饰：阻止冒泡
+                v-on:click.prevent    修饰：阻止默认事件
+                v-on:click.self       修饰：只对绑定标签有效
+                v-on:click.once       修饰：只作用一次
+                v-on:keyup.enter      修饰：捕获特定的键
+                v-on:keyup.tab
+                v-on:keyup.delete
+                v-on:keyup.esc
+                v-on:keyup.space
+                v-on:keyup.up
+                v-on:keyup.down
+                v-on:keyup.left
+                v-on:keyup.right-->
+      <button @click="todoListAdd">添加</button>
+      <button @click="handleClick">隐藏列表</button>
+    </div>
+    <!-- v-if:是否渲染  v-show:是否显示-->
+    <ul v-if="show">
+      <!-- 父向子传参:content ／:index-->
+      <!-- 子向父传参:this.$emit('del', this.index) @del="todoListDel"-->
+      <todo-item
+        v-for="(item, index) of todoList" :key="index"
+        :content="item"
+        :index="index"
+        @del="todoListDel">
+        <span solt="soltname"></span>
+      </todo-item>
+    </ul>
+  </div>
+  <script>
+  // 全局组件
+  // Vue.component('todo-item', {
+  //   template: '<li>ddd</li>'
+  // })
+  // 局部组件
+  var TodoItem = {
+    props: ['content', 'index'],
+    template: '<li @click="handleDel"><solt id="soltname"/>{{content}}</li>',
+    methods: {
+      handleDel: function () { this.$emit('del', this.index) }
+    }
+  }
+
+  new Vue({
+    el: "#container", // 挂载点
+    data: {
+      title: "SB",
+      firstName: '王',
+      lastName: '样',
+      nameChangeCount: 0,
+      show: true,
+      todoList: [],
+      todoListAddValue: 'hello'
+    },
+    // 注删局部组件
+    components: {
+      'todo-item': TodoItem
+    },
+    // 初始化
+    mounted () {
+      this.$nextTick(() => {})  // DOM更新是异步的，依赖DOM数据的操作应放在$nextTick发生后  
+    },
+    // 方法集
+    methods: {
+      handleClick: function () { this.show = !this.show },
+      todoListAdd: function () { this.todoList.push(this.todoListAddValue) },
+      todoListDel: function (index) { this.todoList.splice(index, 1) }
+    },
+    // 过滤器
+    filters: {
+      decimal: function (value) { return value.toFixed(2) }
+    },
+    // 计算属性
+    computed: {
+      fullName: function () { return this.firstName + ' ' + this.lastName },
+      ssl: {
+        get: function(){ return {1: '禁用', 2: '启用', 3: '强制'}[this.sslIndex] },
+        set: function(val){ this.sslIndex = val }
+      }
+    },
+    // 帧听器
+    watch: {
+      // 数据属性
+      firstName: function () { this.nameChangeCount ++ },
+      // 计算属性
+      fullName: function () { this.nameChangeCount ++ },
+      "status": {
+        deep: true, // 是否深入监听
+        immediate: true, // 是否立即执行handler默认false
+        handler: function (status) { }
+      }
+    }
+  })
+  </script>
+</body>
+</html>
+```
+
+
+
+
 # Quick start
 
 It is recommended to install `docsify-cli` globally, which helps initializing and previewing the website locally.
